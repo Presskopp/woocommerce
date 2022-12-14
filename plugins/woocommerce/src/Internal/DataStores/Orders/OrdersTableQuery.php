@@ -123,7 +123,6 @@ class OrdersTableQuery {
 	private $count_sql = '';
 
 	/**
-<<<<<<< HEAD
 	 * SQL query to see if there are more pages after the current page.
 	 *
 	 * @var string
@@ -131,8 +130,6 @@ class OrdersTableQuery {
 	private $approx_count_sql = '';
 
 	/**
-=======
->>>>>>> trunk
 	 * The number of pages (when pagination is enabled).
 	 *
 	 * @var int
