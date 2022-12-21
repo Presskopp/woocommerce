@@ -17,6 +17,7 @@ import {
 	useFormContext,
 	__experimentalRichTextEditor as RichTextEditor,
 	__experimentalTooltip as Tooltip,
+	WooProductFieldItem,
 } from '@woocommerce/components';
 import interpolateComponents from '@automattic/interpolate-components';
 import {
@@ -36,6 +37,8 @@ import { CategoryField } from '../fields/category-field';
 import { EditProductLinkModal } from '../shared/edit-product-link-modal';
 import { getCheckboxTracks } from './utils';
 import { ProductSectionLayout } from '../layout/product-section-layout';
+
+import '../fills';
 
 const PRODUCT_DETAILS_SLUG = 'product-details';
 
@@ -240,6 +243,12 @@ export const ProductDetailsSection: React.FC = () => {
 							'Describe this product. What makes it unique? What are its most important features?',
 							'woocommerce'
 						) }
+					/>
+					<WooProductFieldItem.Slot
+						section="details"
+						fillProps={ {
+							name: 'test',
+						} }
 					/>
 				</CardBody>
 			</Card>

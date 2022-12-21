@@ -1,9 +1,12 @@
 /**
  * External dependencies
  */
-import { isValidElement } from 'react';
+import { isValidElement, Fragment } from 'react';
 import { Slot, Fill } from '@wordpress/components';
 import { cloneElement, createElement } from '@wordpress/element';
+
+// TODO: Right now the build is breaking if I don't reference createElement in some way.
+console.debug( 'createElement', createElement );
 
 /**
  * Ordered fill item.
@@ -39,5 +42,6 @@ export const sortFillsByOrder: Slot.Props[ 'children' ] = ( fills ) => {
 	const sortedFills = [ ...fills ].sort( ( a, b ) => {
 		return a[ 0 ].props.order - b[ 0 ].props.order;
 	} );
+
 	return <>{ sortedFills }</>;
 };
