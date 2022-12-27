@@ -1,0 +1,3 @@
+.woocommerce-product-variations-section:not( :has( .woocommerce-sortable ) ) {
+	display: none;
+}

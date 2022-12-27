@@ -10,10 +10,12 @@ import { Link } from '@woocommerce/components';
  */
 import { ProductSectionLayout } from '../layout/product-section-layout';
 import { Variations } from '../fields/variations';
+import './product-variations-section.scss';
 
 export const ProductVariationsSection: React.FC = () => {
 	return (
 		<ProductSectionLayout
+			className="woocommerce-product-variations-section"
 			title={ __( 'Variations', 'woocommerce' ) }
 			description={
 				<>
