@@ -62,7 +62,8 @@ export const ProductVariationForm: React.FC< {
 				</ProductFormTab>
 				<ProductFormTab name="shipping" title="Shipping">
 					<ProductShippingSection
-						product={ productVariation as PartialProduct }
+						product={ product }
+						productVariation={ productVariation }
 					/>
 				</ProductFormTab>
 			</ProductFormLayout>

@@ -10,6 +10,7 @@ import {
 	OPTIONS_STORE_NAME,
 	PartialProduct,
 	ProductShippingClass,
+	ProductVariation,
 } from '@woocommerce/data';
 import interpolateComponents from '@automattic/interpolate-components';
 import { recordEvent } from '@woocommerce/tracks';
@@ -41,19 +42,12 @@ import {
 
 export type ProductShippingSectionProps = {
 	product?: PartialProduct;
+	productVariation?: Partial< ProductVariation >;
 };
 
 type ServerErrorResponse = {
 	code: string;
 };
-
-export const DEFAULT_SHIPPING_CLASS_OPTIONS: SelectControl.Option[] = [
-	{ value: '', label: __( 'No shipping class', 'woocommerce' ) },
-	{
-		value: ADD_NEW_SHIPPING_CLASS_OPTION_VALUE,
-		label: __( 'Add new shipping class', 'woocommerce' ),
-	},
-];
 
 function mapShippingClassToSelectOption(
 	shippingClasses: ProductShippingClass[]
@@ -80,15 +74,15 @@ function getInterpolatedSizeLabel( mixedString: string ) {
  *
  * @see https://github.com/woocommerce/woocommerce/issues/34657
  * @see https://github.com/woocommerce/woocommerce/issues/35037
- * @param product The product
+ * @param categories The product categories
  * @param shippingClasses The shipping classes
  * @return The default shipping class
  */
 function extractDefaultShippingClassFromProduct(
-	product?: PartialProduct,
+	categories?: PartialProduct[ 'categories' ],
 	shippingClasses?: ProductShippingClass[]
 ): Partial< ProductShippingClass > | undefined {
-	const category = product?.categories?.find(
+	const category = categories?.find(
 		( { slug } ) => slug !== UNCATEGORIZED_CATEGORY_SLUG
 	);
 	if (
@@ -102,8 +96,32 @@ function extractDefaultShippingClassFromProduct(
 	}
 }
 
+function getShippingClassOptions(
+	shippingClasses?: ProductShippingClass[],
+	isVariableProduct = false
+) {
+	const shippingClassOptions: SelectControl.Option[] = [
+		{
+			value: '',
+			label: isVariableProduct
+				? __( 'Same as parent', 'woocommerce' )
+				: __( 'No shipping class', 'woocommerce' ),
+		},
+		{
+			value: ADD_NEW_SHIPPING_CLASS_OPTION_VALUE,
+			label: __( 'Add new shipping class', 'woocommerce' ),
+		},
+	];
+
+	return [
+		...shippingClassOptions,
+		...mapShippingClassToSelectOption( shippingClasses ?? [] ),
+	];
+}
+
 export function ProductShippingSection( {
 	product,
+	productVariation,
 }: ProductShippingSectionProps ) {
 	const { getInputProps, getSelectControlProps, setValue } =
 		useFormContext< PartialProduct >();
@@ -226,12 +244,10 @@ export function ProductShippingSection( {
 									}
 									shippingClassProps.onChange( value );
 								} }
-								options={ [
-									...DEFAULT_SHIPPING_CLASS_OPTIONS,
-									...mapShippingClassToSelectOption(
-										shippingClasses ?? []
-									),
-								] }
+								options={ getShippingClassOptions(
+									shippingClasses,
+									product?.type === 'variable'
+								) }
 							/>
 							<span className="woocommerce-product-form__secondary-text">
 								{ interpolateComponents( {
@@ -382,7 +398,7 @@ export function ProductShippingSection( {
 			{ showShippingClassModal && (
 				<AddNewShippingClassModal
 					shippingClass={ extractDefaultShippingClassFromProduct(
-						product,
+						productVariation?.categories ?? product?.categories,
 						shippingClasses
 					) }
 					onAdd={ ( shippingClassValues ) =>
