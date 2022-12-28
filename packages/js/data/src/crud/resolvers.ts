@@ -33,15 +33,20 @@ export const createResolvers = ( {
 	namespace,
 }: ResolverOptions ) => {
 	const getItem = function* ( idQuery: IdQuery ) {
-		const urlParameters = getUrlParameters( namespace, idQuery );
-		const { id, key } = parseId( idQuery, urlParameters );
+		const { key } = parseId(
+			idQuery,
+			getUrlParameters( namespace, idQuery )
+		);
 		try {
+			const templatePath = `${ namespace }/{id}`;
+			const urlParameters = getUrlParameters( templatePath, idQuery );
+			const query = cleanQuery(
+				idQuery as Partial< ItemQuery >,
+				templatePath
+			);
+
 			const item: Item = yield apiFetch( {
-				path: getRestPath(
-					`${ namespace }/${ id }`,
-					{},
-					urlParameters
-				),
+				path: getRestPath( templatePath, query, urlParameters ),
 				method: 'GET',
 			} );
 

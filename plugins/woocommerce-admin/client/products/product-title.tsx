@@ -48,6 +48,7 @@ export const ProductTitle: React.FC = () => {
 					? getProductVariation( {
 							id: parseInt( variationId, 10 ),
 							product_id: parseInt( productId, 10 ),
+							context: 'edit',
 					  } )
 					: null;
 
@@ -66,6 +67,7 @@ export const ProductTitle: React.FC = () => {
 						{
 							id: parseInt( variationId, 10 ),
 							product_id: parseInt( productId, 10 ),
+							context: 'edit',
 						},
 					]
 				);

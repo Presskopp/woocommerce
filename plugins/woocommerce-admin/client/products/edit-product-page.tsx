@@ -47,6 +47,14 @@ const EditProductPage: React.FC = () => {
 				const permalinkParts = getPermalinkParts(
 					parseInt( productId, 10 )
 				);
+				const productVariationParams: {
+					id: number | string;
+					[ key: string ]: number | string;
+				} = {
+					id: parseInt( variationId ?? '0', 10 ),
+					product_id: parseInt( productId, 10 ),
+					context: 'edit',
+				};
 				return {
 					product:
 						permalinkParts && retrievedProduct
@@ -54,10 +62,7 @@ const EditProductPage: React.FC = () => {
 							: undefined,
 					productVariation:
 						isProductVariation &&
-						getProductVariation( {
-							id: parseInt( variationId, 10 ),
-							product_id: parseInt( productId, 10 ),
-						} ),
+						getProductVariation( productVariationParams ),
 					isLoading:
 						! hasProductFinishedResolution( 'getProduct', [
 							parseInt( productId, 10 ),
@@ -69,7 +74,7 @@ const EditProductPage: React.FC = () => {
 							isProductVariation &&
 							hasProductVariationFinishedResolution(
 								'getProductVariation',
-								[ parseInt( variationId, 10 ) ]
+								[ productVariationParams ]
 							)
 						),
 					isPendingAction:
