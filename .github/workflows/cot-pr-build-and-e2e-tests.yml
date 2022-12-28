@@ -1,7 +1,6 @@
 name: Run tests against PR in an environment with COT enabled
 on:
     pull_request:
-        types: [labeled]
     workflow_dispatch:
 
 concurrency:
@@ -11,7 +10,6 @@ concurrency:
 jobs:
     cot-e2e-tests-run:
         name: Runs E2E tests with COT enabled.
-        if: "${{ github.event_name == 'workflow_dispatch' || github.event.label.name == 'focus: custom order tables' }}"
         runs-on: ubuntu-20.04
         env:
             ALLURE_RESULTS_DIR: ${{ github.workspace }}/plugins/woocommerce/tests/e2e-pw/allure-results
@@ -66,7 +64,6 @@ jobs:
 
     cot-api-tests-run:
         name: Runs API tests with COT enabled.
-        if: "${{ github.event_name == 'workflow_dispatch' || github.event.label.name == 'focus: custom order tables' }}"
         runs-on: ubuntu-20.04
         env:
             ALLURE_RESULTS_DIR: ${{ github.workspace }}/plugins/woocommerce/tests/api-core-tests/api-test-report/allure-results
