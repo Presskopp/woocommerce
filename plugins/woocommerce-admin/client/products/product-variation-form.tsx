@@ -58,7 +58,7 @@ export const ProductVariationForm: React.FC< {
 					<PricingSection parent={ product } />
 				</ProductFormTab>
 				<ProductFormTab name="inventory" title="Inventory">
-					<ProductInventorySection />
+					<ProductInventorySection parent={ product } />
 				</ProductFormTab>
 				<ProductFormTab name="shipping" title="Shipping">
 					<ProductShippingSection

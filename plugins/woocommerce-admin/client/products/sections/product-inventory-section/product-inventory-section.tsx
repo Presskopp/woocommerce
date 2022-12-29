@@ -16,7 +16,7 @@ import {
 	Tooltip,
 } from '@wordpress/components';
 import { getAdminLink } from '@woocommerce/settings';
-import { Product } from '@woocommerce/data';
+import { PartialProduct, Product } from '@woocommerce/data';
 import { recordEvent } from '@woocommerce/tracks';
 
 /**
@@ -29,7 +29,9 @@ import { ProductSectionLayout } from '../../layout/product-section-layout';
 import { ManageStockSection } from './manage-stock-section';
 import { ManualStockSection } from './manual-stock-section';
 
-export const ProductInventorySection: React.FC = () => {
+export const ProductInventorySection: React.FC<
+	ProductInventorySectionProps
+> = ( { parent } ) => {
 	const { getCheckboxControlProps, getInputProps, values } =
 		useFormContext< Product >();
 	const canManageStock = getAdminSetting( 'manageStock', 'yes' ) === 'yes';
@@ -74,6 +76,7 @@ export const ProductInventorySection: React.FC = () => {
 						{ ...getInputProps( 'sku', {
 							className: 'half-width-field',
 						} ) }
+						placeholder={ parent?.sku }
 					/>
 					<div className="woocommerce-product-form__field">
 						<ConditionalWrapper
@@ -121,4 +124,8 @@ export const ProductInventorySection: React.FC = () => {
 			</Card>
 		</ProductSectionLayout>
 	);
+};
+
+export type ProductInventorySectionProps = {
+	parent?: PartialProduct;
 };
