@@ -12,6 +12,7 @@ import {
 	Product,
 	OPTIONS_STORE_NAME,
 	SETTINGS_STORE_NAME,
+	PartialProduct,
 } from '@woocommerce/data';
 import { recordEvent } from '@woocommerce/tracks';
 import { useContext, useEffect, useState } from '@wordpress/element';
@@ -40,9 +41,12 @@ import { useProductHelper } from '../use-product-helper';
 
 const PRODUCT_SCHEDULED_SALE_SLUG = 'product-scheduled-sale';
 
-export const PricingSection: React.FC = () => {
+export const PricingSection: React.FC< PricingSectionProps > = ( {
+	parent,
+} ) => {
 	const { sanitizePrice } = useProductHelper();
-	const { getInputProps, setValues, values } = useFormContext< Product >();
+	const { getInputProps, setValue, setValues, values } =
+		useFormContext< Product >();
 	const [ showSaleSchedule, setShowSaleSchedule ] = useState( false );
 	const [ userToggledSaleSchedule, setUserToggledSaleSchedule ] =
 		useState( false );
@@ -188,17 +192,43 @@ export const PricingSection: React.FC = () => {
 			}
 		},
 	};
-	const regularPriceProps = getInputProps(
-		'regular_price',
-		currencyInputProps
-	);
-	const salePriceProps = getInputProps( 'sale_price', currencyInputProps );
+	const regularPriceProps = getInputProps( 'regular_price', {
+		...currencyInputProps,
+		placeholder: ( parent && parent.regular_price ) ?? '',
+	} );
+	const salePriceProps = getInputProps( 'sale_price', {
+		...currencyInputProps,
+		placeholder: ( parent && parent.sale_price ) ?? '',
+	} );
 
 	const dateTimePickerProps = {
 		className: 'woocommerce-product__date-time-picker',
 		isDateOnlyPicker: true,
 		dateTimeFormat: dateFormat,
 	};
+
+	function getPlaceholderForVariation( value?: string ) {
+		if ( ! value ) return;
+		return formatCurrencyDisplayValue(
+			value,
+			currencyConfig,
+			formatAmount
+		);
+	}
+
+	function setValueForVariation(
+		name: string,
+		currentValue?: string,
+		newValue?: string
+	) {
+		if ( currentValue || ! newValue ) return;
+		setValue( name, newValue );
+	}
+
+	if ( parent ) {
+		parent.regular_price = '1019.99';
+		parent.sale_price = '1010.99';
+	}
 
 	return (
 		<ProductSectionLayout
@@ -243,6 +273,20 @@ export const PricingSection: React.FC = () => {
 								currencyConfig,
 								formatAmount
 							) }
+							placeholder={ getPlaceholderForVariation(
+								parent?.regular_price
+							) }
+							onFocus={ (
+								event: React.FocusEvent< HTMLInputElement >
+							) => {
+								setValueForVariation(
+									'regular_price',
+									regularPriceProps?.value as string,
+									parent?.regular_price
+								);
+
+								currencyInputProps.onFocus( event );
+							} }
 						/>
 					</BaseControl>
 					{ ! isTaxSettingsResolving && (
@@ -264,6 +308,20 @@ export const PricingSection: React.FC = () => {
 								currencyConfig,
 								formatAmount
 							) }
+							placeholder={ getPlaceholderForVariation(
+								parent?.sale_price
+							) }
+							onFocus={ (
+								event: React.FocusEvent< HTMLInputElement >
+							) => {
+								setValueForVariation(
+									'sale_price',
+									salePriceProps?.value as string,
+									parent?.sale_price
+								);
+
+								currencyInputProps.onFocus( event );
+							} }
 						/>
 					</BaseControl>
 
@@ -359,4 +417,8 @@ export const PricingSection: React.FC = () => {
 			</Card>
 		</ProductSectionLayout>
 	);
+};
+
+export type PricingSectionProps = {
+	parent?: PartialProduct;
 };
