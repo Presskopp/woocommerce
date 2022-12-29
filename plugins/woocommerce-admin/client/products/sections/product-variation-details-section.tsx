@@ -15,8 +15,12 @@ import {
 	__experimentalRichTextEditor as RichTextEditor,
 	__experimentalTooltip as Tooltip,
 } from '@woocommerce/components';
-import { ProductVariation, ProductVariationImage } from '@woocommerce/data';
-import { useState } from '@wordpress/element';
+import {
+	PartialProduct,
+	ProductVariation,
+	ProductVariationImage,
+} from '@woocommerce/data';
+import { useEffect, useState } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -49,7 +53,9 @@ function formatVariationImage(
 	} as MediaItem;
 }
 
-export const ProductVariationDetailsSection: React.FC = () => {
+export const ProductVariationDetailsSection: React.FC<
+	ProductVariationDetailsSectionProps
+> = ( { parent } ) => {
 	const { getCheckboxControlProps, getInputProps, values, setValue } =
 		useFormContext< ProductVariation >();
 
@@ -58,6 +64,12 @@ export const ProductVariationDetailsSection: React.FC = () => {
 	>( parse( values.description || '' ) );
 
 	const imageFieldProps = getInputProps( 'image' );
+
+	useEffect( () => {
+		if ( parent?.images?.length && ! values.image ) {
+			setValue( 'image', parent.images[ 0 ] );
+		}
+	}, [ parent?.images ] );
 
 	return (
 		<ProductSectionLayout
@@ -129,4 +141,8 @@ export const ProductVariationDetailsSection: React.FC = () => {
 			</Card>
 		</ProductSectionLayout>
 	);
+};
+
+export type ProductVariationDetailsSectionProps = {
+	parent?: PartialProduct;
 };

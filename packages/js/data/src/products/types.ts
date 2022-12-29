@@ -67,6 +67,7 @@ export type Product< Status = ProductStatus, Type = ProductType > = Omit<
 	external_url: string;
 	featured: boolean;
 	id: number;
+	images: ProductImage[];
 	low_stock_amount: number;
 	manage_stock: boolean;
 	menu_order: number;
@@ -156,3 +157,43 @@ export type ProductQuery<
 	max_price: string;
 	stock_status: 'instock' | 'outofstock' | 'onbackorder';
 };
+
+/**
+ * Product - Images properties
+ *
+ * @see https://woocommerce.github.io/woocommerce-rest-api-docs/#product-images-properties
+ */
+export interface ProductImage {
+	/**
+	 * Image ID.
+	 */
+	id: number;
+	/**
+	 * The date the image was created, in the site's timezone.
+	 */
+	readonly date_created: string;
+	/**
+	 * The date the image was created, as GMT.
+	 */
+	readonly date_created_gmt: string;
+	/**
+	 * The date the image was last modified, in the site's timezone.
+	 */
+	readonly date_modified: string;
+	/**
+	 * The date the image was last modified, as GMT.
+	 */
+	readonly date_modified_gmt: string;
+	/**
+	 * Image URL.
+	 */
+	src: string;
+	/**
+	 * Image name.
+	 */
+	name: string;
+	/**
+	 * Image alternative text.
+	 */
+	alt: string;
+}
