@@ -192,14 +192,11 @@ export const PricingSection: React.FC< PricingSectionProps > = ( {
 			}
 		},
 	};
-	const regularPriceProps = getInputProps( 'regular_price', {
-		...currencyInputProps,
-		placeholder: ( parent && parent.regular_price ) ?? '',
-	} );
-	const salePriceProps = getInputProps( 'sale_price', {
-		...currencyInputProps,
-		placeholder: ( parent && parent.sale_price ) ?? '',
-	} );
+	const regularPriceProps = getInputProps(
+		'regular_price',
+		currencyInputProps
+	);
+	const salePriceProps = getInputProps( 'sale_price', currencyInputProps );
 
 	const dateTimePickerProps = {
 		className: 'woocommerce-product__date-time-picker',
