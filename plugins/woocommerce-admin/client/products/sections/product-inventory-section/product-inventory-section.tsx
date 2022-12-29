@@ -15,6 +15,7 @@ import {
 	ToggleControl,
 	TextControl,
 	Tooltip,
+	Disabled,
 } from '@wordpress/components';
 import { getAdminLink } from '@woocommerce/settings';
 import { PartialProduct, Product, ProductVariation } from '@woocommerce/data';
@@ -36,15 +37,6 @@ export const ProductInventorySection: React.FC<
 	const { getCheckboxControlProps, getInputProps, setValue, values } =
 		useFormContext< Product | ProductVariation >();
 	const canManageStock = getAdminSetting( 'manageStock', 'yes' ) === 'yes';
-
-	useEffect( () => {
-		if (
-			parent?.manage_stock &&
-			( values as ProductVariation )?.manage_stock === 'parent'
-		) {
-			setValue( 'manage_stock', true );
-		}
-	}, [ parent?.manage_stock ] );
 
 	return (
 		<ProductSectionLayout
@@ -121,7 +113,14 @@ export const ProductInventorySection: React.FC<
 						</ConditionalWrapper>
 					</div>
 					{ values.manage_stock ? (
-						<ManageStockSection parent={ parent } />
+						<ConditionalWrapper
+							condition={ values.manage_stock === 'parent' }
+							wrapper={ ( children ) => (
+								<Disabled>{ children }</Disabled>
+							) }
+						>
+							<ManageStockSection />
+						</ConditionalWrapper>
 					) : (
 						<ManualStockSection />
 					) }
