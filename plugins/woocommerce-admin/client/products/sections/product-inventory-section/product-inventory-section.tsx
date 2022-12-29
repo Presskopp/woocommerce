@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
+import { useEffect } from '@wordpress/element';
 import {
 	CollapsibleContent,
 	__experimentalConditionalWrapper as ConditionalWrapper,
@@ -16,7 +17,7 @@ import {
 	Tooltip,
 } from '@wordpress/components';
 import { getAdminLink } from '@woocommerce/settings';
-import { PartialProduct, Product } from '@woocommerce/data';
+import { PartialProduct, Product, ProductVariation } from '@woocommerce/data';
 import { recordEvent } from '@woocommerce/tracks';
 
 /**
@@ -32,9 +33,18 @@ import { ManualStockSection } from './manual-stock-section';
 export const ProductInventorySection: React.FC<
 	ProductInventorySectionProps
 > = ( { parent } ) => {
-	const { getCheckboxControlProps, getInputProps, values } =
-		useFormContext< Product >();
+	const { getCheckboxControlProps, getInputProps, setValue, values } =
+		useFormContext< Product | ProductVariation >();
 	const canManageStock = getAdminSetting( 'manageStock', 'yes' ) === 'yes';
+
+	useEffect( () => {
+		if (
+			parent?.manage_stock &&
+			( values as ProductVariation )?.manage_stock === 'parent'
+		) {
+			setValue( 'manage_stock', true );
+		}
+	}, [ parent?.manage_stock ] );
 
 	return (
 		<ProductSectionLayout
