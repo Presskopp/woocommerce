@@ -121,7 +121,7 @@ export const ProductInventorySection: React.FC<
 						</ConditionalWrapper>
 					</div>
 					{ values.manage_stock ? (
-						<ManageStockSection />
+						<ManageStockSection parent={ parent } />
 					) : (
 						<ManualStockSection />
 					) }
