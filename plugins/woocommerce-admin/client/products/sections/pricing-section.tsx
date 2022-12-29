@@ -225,11 +225,6 @@ export const PricingSection: React.FC< PricingSectionProps > = ( {
 		setValue( name, newValue );
 	}
 
-	if ( parent ) {
-		parent.regular_price = '1019.99';
-		parent.sale_price = '1010.99';
-	}
-
 	return (
 		<ProductSectionLayout
 			title={ __( 'Pricing', 'woocommerce' ) }
