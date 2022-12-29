@@ -105,7 +105,7 @@ class WC_REST_Product_Variations_Controller extends WC_REST_Product_Variations_V
 			),
 			'shipping_class'        => $object->get_shipping_class( $context ),
 			'shipping_class_id'     => $object->get_shipping_class_id( $context ),
-			'image'                 => $this->get_image( $object ),
+			'image'                 => $this->get_image( $object, $context ),
 			'attributes'            => $this->get_attributes( $object ),
 			'menu_order'            => $object->get_menu_order( $context ),
 			'meta_data'             => $object->get_meta_data( $context ),
@@ -351,14 +351,15 @@ class WC_REST_Product_Variations_Controller extends WC_REST_Product_Variations_V
 	 * Get the image for a product variation.
 	 *
 	 * @param WC_Product_Variation $variation Variation data.
+	 * @param string $context Request context param.
 	 * @return array
 	 */
-	protected function get_image( $variation ) {
-		if ( ! $variation->get_image_id() ) {
+	protected function get_image( $variation, $context = 'view' ) {
+		if ( ! $variation->get_image_id( $context ) ) {
 			return;
 		}
 
-		$attachment_id   = $variation->get_image_id();
+		$attachment_id   = $variation->get_image_id( $context );
 		$attachment_post = get_post( $attachment_id );
 		if ( is_null( $attachment_post ) ) {
 			return;
